@@ -43,9 +43,14 @@ func (*repo) Save(cliente *entity.Client) (*entity.Client, error) {
 
 	defer client.Close()
 	_, _, err = client.Collection(collectionName).Add(ctx, map[string]interface{}{
-		"ID":      cliente.ID,
-		"Nombres": cliente.Nombres,
-		"Email":   cliente.Email,
+		"ID":        cliente.ID,
+		"Nombres":   cliente.Nombres,
+		"Apellidos": cliente.Apellidos,
+		"DNI":       cliente.DNI,
+		"Anio":      cliente.Anio,
+		"Mes":       cliente.Mes,
+		"Dia":       cliente.Dia,
+		"Ciudad":    cliente.Ciudad,
 	})
 
 	if err != nil {
@@ -68,7 +73,12 @@ func (*repo) Actualizar(cliente *entity.Client) (*entity.Client, error) {
 
 	_, err = docRef.Update(ctx, []firestore.Update{
 		{Path: "Nombres", Value: cliente.Nombres},
-		{Path: "Email", Value: cliente.Email},
+		{Path: "Apellidos", Value: cliente.Apellidos},
+		{Path: "DNI", Value: cliente.DNI},
+		{Path: "Anio", Value: cliente.Anio},
+		{Path: "Mes", Value: cliente.Mes},
+		{Path: "Dia", Value: cliente.Dia},
+		{Path: "Ciudad", Value: cliente.Ciudad},
 	})
 
 	if err != nil {
@@ -133,9 +143,14 @@ func (*repo) FindAll() ([]entity.Client, error) {
 
 		}
 		cliente := entity.Client{
-			ID:      doc.Data()["ID"].(int64),
-			Nombres: doc.Data()["Nombres"].(string),
-			Email:   doc.Data()["Email"].(string),
+			ID:        doc.Data()["ID"].(int64),
+			Nombres:   doc.Data()["Nombres"].(string),
+			Apellidos: doc.Data()["Apellidos"].(string),
+			DNI:       doc.Data()["DNI"].(string),
+			Anio:      doc.Data()["Anio"].(string),
+			Mes:       doc.Data()["Mes"].(string),
+			Dia:       doc.Data()["Dia"].(string),
+			Ciudad:    doc.Data()["Ciudad"].(string),
 		}
 		clientes = append(clientes, cliente)
 
