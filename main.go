@@ -2,20 +2,31 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"golang-crud-rest-api/controller"
+	router "golang-crud-rest-api/http"
+	"golang-crud-rest-api/repository"
+	"golang-crud-rest-api/service"
+)
+
+var (
+	clientRepository repository.ClientRepository = repository.NewClientRepository()
+	clientService    service.ClientService       = service.NewClientService(clientRepository)
+	postController   controller.ClientController = controller.NewClientController(clientService)
+	httpRouter       router.Router               = router.NewMuxRouter()
 )
 
 func main() {
-	router := mux.NewRouter()
+	//router := mux.NewRouter()
 	const port string = ":8000"
-	router.HandleFunc("/", func(resp http.ResponseWriter, req *http.Request) {
+	httpRouter.GET("/", func(resp http.ResponseWriter, req *http.Request) {
 		fmt.Fprintln(resp, "Server listo y corriendo . . .")
 	})
-	router.HandleFunc("/posts", getPosts).Methods("GET")
-	router.HandleFunc("/posts", addPost).Methods("POST")
-	log.Println("Server corriendo  en el puerto ", port)
-	log.Fatalln(http.ListenAndServe(port, router))
+	httpRouter.GET("/posts", postController.GetClientes)
+	httpRouter.POST("/posts", postController.AddCliente)
+	httpRouter.POST("/post/{id}", postController.GetClienteById)
+	/*log.Println("Server corriendo  en el puerto ", port)
+	log.Fatalln(http.ListenAndServe(port, router))*/
+	httpRouter.SERVE(port)
 }
