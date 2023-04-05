@@ -14,11 +14,11 @@ var (
 	clientRepository repository.ClientRepository = repository.NewClientRepository()
 	clientService    service.ClientService       = service.NewClientService(clientRepository)
 	postController   controller.ClientController = controller.NewClientController(clientService)
-	httpRouter       router.Router               = router.NewMuxRouter()
+	httpRouter       router.Router               = router.NewGinRouter()
+	//httpRouter       router.Router               = router.NewMuxRouter()
 )
 
 func main() {
-	//router := mux.NewRouter()
 	const port string = ":8000"
 	httpRouter.GET("/", func(resp http.ResponseWriter, req *http.Request) {
 		fmt.Fprintln(resp, "Server listo y corriendo . . .")
@@ -26,7 +26,5 @@ func main() {
 	httpRouter.GET("/posts", postController.GetClientes)
 	httpRouter.POST("/posts", postController.AddCliente)
 	httpRouter.POST("/post/{id}", postController.GetClienteById)
-	/*log.Println("Server corriendo  en el puerto ", port)
-	log.Fatalln(http.ListenAndServe(port, router))*/
 	httpRouter.SERVE(port)
 }
